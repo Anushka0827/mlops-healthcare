@@ -1,0 +1,71 @@
+# Expt 6-7: CI/CD — lint → test → build → push → deploy
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/medqa-mlops
+
+jobs:
+  # ── Expt 6: CI ──────────────────────────────────────────────────────────────
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deps
+        run: pip install -r requirements.txt ruff pytest httpx
+
+      - name: Lint
+        run: ruff check app/ ui/
+
+      - name: Test
+        run: pytest tests/ -v --tb=short
+        env:
+          SECRET_KEY: test-secret
+
+  # ── Expt 7: CD ──────────────────────────────────────────────────────────────
+  cd:
+    needs: ci
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ env.IMAGE }}:latest,${{ env.IMAGE }}:${{ github.sha }}
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker pull ${{ env.IMAGE }}:latest
+            docker stop medqa-api || true
+            docker rm medqa-api  || true
+            docker run -d \
+              --name medqa-api \
+              --restart unless-stopped \
+              -p 8000:8000 \
+              -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
+              ${{ env.IMAGE }}:latest
