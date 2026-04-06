@@ -39,9 +39,12 @@ with st.sidebar:
             st.error(f"Login failed: {r.json().get('detail')}")
 
     st.divider()
-    health = requests.get(f"{API}/health").json()
-    st.metric("API Status", health.get("status", "—").upper())
-    st.metric("Uptime (s)", health.get("uptime_seconds", "—"))
+    try:
+        health = requests.get(f"{API}/health", timeout=2).json()
+        st.metric("API Status", health.get("status", "—").upper())
+        st.metric("Uptime (s)", health.get("uptime_seconds", "—"))
+    except Exception:
+        st.error("⚠️ API Offline — start uvicorn first")
 
 # ── Main — Prediction form ─────────────────────────────────────────────────────
 st.title("🏥 MedQA MLOps · Patient Triage")

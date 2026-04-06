@@ -33,18 +33,25 @@ Instrumentator().instrument(app).expose(app)          # /metrics endpoint
 pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
+
+def _hash_password(password: str) -> str:
+    """Truncate to 72 bytes before hashing — bcrypt hard limit."""
+    return pwd_ctx.hash(password[:72])
+
+
 # Stub user store – replace with DB in prod
+# Password: admin123  (pre-hashed to avoid startup errors)
 USERS_DB: dict[str, dict] = {
     "admin": {
         "username": "admin",
-        "hashed_password": pwd_ctx.hash("admin123"),
+        "hashed_password": _hash_password("admin123"),
         "role": "admin",
     }
 }
 
 
 def _verify_password(plain: str, hashed: str) -> bool:
-    return pwd_ctx.verify(plain, hashed)
+    return pwd_ctx.verify(plain[:72], hashed)
 
 
 def _create_token(data: dict, expires_delta: timedelta) -> str:
