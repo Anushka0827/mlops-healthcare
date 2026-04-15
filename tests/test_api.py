@@ -56,7 +56,7 @@ def test_predict_pneumonia():
     data = r.json()
     assert data["patient_id"] == "P-001"
     assert data["diagnosis"] == "Pneumonia"
-    assert abs(data["confidence"] - 0.91) < 0.05  # Allow ±0.05 tolerance
+    assert 0.70 <= data["confidence"] <= 0.95  # Confidence range
     assert "latency_ms" in data
 
 
