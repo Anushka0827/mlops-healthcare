@@ -6,6 +6,9 @@ import time
 from datetime import datetime, timedelta
 from typing import Annotated
 
+import joblib
+import numpy as np
+
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -16,6 +19,8 @@ from pydantic import BaseModel, Field
 from prometheus_fastapi_instrumentator import Instrumentator
 
 load_dotenv()
+_model = joblib.load("model.pkl")
+_mlb   = joblib.load("mlb.pkl")
 
 # ── Config ────────────────────────────────────────────────────────────────────
 SECRET_KEY: str = os.getenv("SECRET_KEY", "change-me-in-prod")
@@ -136,9 +141,12 @@ def predict(
     t0 = time.perf_counter()
     logger.info(f"Predict called by {current_user['username']} for patient {req.patient_id}")
 
-    # ── Stub model inference — swap with real model.predict() ─────────────────
-    diagnosis = "Pneumonia" if "cough" in req.symptoms else "General Checkup"
-    confidence = 0.91 if diagnosis == "Pneumonia" else 0.60
+    # ── Real ML model inference ───────────────────────────────────────────────
+
+    symptoms_vec = _mlb.transform([req.symptoms])
+    diagnosis    = _model.predict(symptoms_vec)[0]
+    proba        = _model.predict_proba(symptoms_vec)[0]
+    confidence   = round(float(np.max(proba)), 2)
     # ─────────────────────────────────────────────────────────────────────────
 
     latency = round((time.perf_counter() - t0) * 1000, 2)

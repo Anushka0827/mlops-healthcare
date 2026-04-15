@@ -20,6 +20,8 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy application code
 COPY app/ ./app/
 COPY ui/ ./ui/
+COPY model.pkl .
+COPY mlb.pkl .
 COPY .env.example .env
 
 # Create logs directory

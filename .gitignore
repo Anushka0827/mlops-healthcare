@@ -7,3 +7,5 @@ logs/
 *.egg-info/
 .venv/
 myvenv/
+model.pkl
+mlb.pkl
