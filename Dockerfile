@@ -8,7 +8,7 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
   pip install --no-cache-dir -r requirements.txt
 
-# ── Stage 2: Runtime ──────────────────────────────────────────────────────────
+# ── Stage 2: Runtime ─��────────────────────────────────────────────────────────
 FROM python:3.11-slim AS runtime
 
 WORKDIR /app
@@ -17,17 +17,16 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy application code
+# Copy application code first
 COPY app/ ./app/
 COPY ui/ ./ui/
-#COPY model.pkl .
-#COPY mlb.pkl .
 COPY .env.example .env
-# Generate models during build
-RUN python app/train_model.py || echo "Models will be generated at runtime"
 
 # Create logs directory
 RUN mkdir -p logs
+
+# Generate models during build (with error handling)
+RUN python app/train_model.py 2>&1 || echo "Warning: Model training failed during build. Models will be generated at runtime if needed."
 
 # Expose FastAPI port
 EXPOSE 8000
