@@ -1,5 +1,4 @@
 # tests/test_api.py — pytest test suite for MedQA MLOps API
-import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 
