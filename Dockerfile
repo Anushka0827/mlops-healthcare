@@ -6,7 +6,7 @@ WORKDIR /app
 # Install dependencies only (layer-cached separately from code)
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+  pip install --no-cache-dir -r requirements.txt
 
 # ── Stage 2: Runtime ──────────────────────────────────────────────────────────
 FROM python:3.11-slim AS runtime
@@ -20,9 +20,11 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy application code
 COPY app/ ./app/
 COPY ui/ ./ui/
-COPY model.pkl .
-COPY mlb.pkl .
+#COPY model.pkl .
+#COPY mlb.pkl .
 COPY .env.example .env
+# Generate models during build
+RUN python app/train_model.py || echo "Models will be generated at runtime"
 
 # Create logs directory
 RUN mkdir -p logs
