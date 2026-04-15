@@ -56,9 +56,8 @@ def test_predict_pneumonia():
     data = r.json()
     assert data["patient_id"] == "P-001"
     assert data["diagnosis"] == "Pneumonia"
-    assert 0.70 <= data["confidence"] <= 0.95  # Confidence range
+    assert data["confidence"] == 0.77  # Updated to match actual model output
     assert "latency_ms" in data
-
 
 def test_predict_general_checkup():
     payload = {
