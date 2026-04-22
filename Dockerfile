@@ -20,13 +20,14 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy application code first
 COPY app/ ./app/
 COPY ui/ ./ui/
+COPY train_model.py .
 COPY .env.example .env
 
 # Create logs directory
 RUN mkdir -p logs
 
-# Generate models during build (with error handling)
-RUN python app/train_model.py 2>&1 || echo "Warning: Model training failed during build. Models will be generated at runtime if needed."
+# Generate models during build
+RUN python train_model.py
 
 # Expose FastAPI port
 EXPOSE 8000

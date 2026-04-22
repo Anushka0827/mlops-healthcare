@@ -9,7 +9,7 @@ This repository contains a complete end-to-end Machine Learning pipeline. It tra
 ## 🧪 Course Structure & Experiments Completed
 This project implements the following MLOps architectures:
 
-- [x] **Expt 1:** Train ML model and deploy model to file (Save to PKL file)
+- [x] **Expt 1:** Train ML model and sync to Cloud Object Storage (AWS S3 Artifact Registry)
 - [x] **Expt 2:** Create backend for model inference (FastAPI, Pydantic schemas)
 - [x] **Expt 3:** Error handling and logging (Loguru, structured logging)
 - [x] **Expt 4:** Implement basic authentication (JWT-based token auth)
@@ -18,7 +18,7 @@ This project implements the following MLOps architectures:
 - [x] **Expt 7:** Set up CI/CD pipeline (GitHub Actions for Lint/Test/Build)
 - [x] **Expt 8:** Deploy Docker container to Cloud VM (AWS EC2 / Docker Compose)
 - [x] **Expt 9:** Create frontend to visualize predictions using test data (Streamlit)
-- [x] **Expt 10:** Create frontend with real-time user input (Forms & Live Results)
+- [x] **Expt 10:** Create frontend with real-time user input (Professional Monitoring UI)
 - [ ] **Expt 11:** Model monitoring using Prometheus & Grafana *(Next Phase)*
 - [ ] **Expt 12:** Kubernetes setup for ML application *(Next Phase)*
 

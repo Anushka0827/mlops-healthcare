@@ -11,7 +11,6 @@ API = os.getenv("API_URL", "http://localhost:8000")
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="MedQA MLOps Dashboard",
-    page_icon="🏥",
     layout="wide",
 )
 
@@ -23,7 +22,7 @@ if "history" not in st.session_state:
 
 # ── Sidebar — Auth ────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.title("🔐 Auth")
+    st.title("Authentication System")
     username = st.text_input("Username", value="admin")
     password = st.text_input("Password", type="password", value="admin123")
 
@@ -34,7 +33,7 @@ with st.sidebar:
         )
         if r.status_code == 200:
             st.session_state.token = r.json()["access_token"]
-            st.success("Authenticated ✓")
+            st.success("Authentication successful")
         else:
             st.error(f"Login failed: {r.json().get('detail')}")
 
@@ -44,10 +43,11 @@ with st.sidebar:
         st.metric("API Status", health.get("status", "—").upper())
         st.metric("Uptime (s)", health.get("uptime_seconds", "—"))
     except Exception:
-        st.error("⚠️ API Offline — start uvicorn first")
+        st.error("API Error: Backend service offline")
 
 # ── Main — Prediction form ─────────────────────────────────────────────────────
-st.title("🏥 MedQA MLOps · Patient Triage")
+st.title("MedQA: Clinical Patient Triage Framework")
+st.markdown("A clinical-grade monitoring and triage system designed to predict patient diagnoses based on symptomatic inputs, ensuring structured, secure, and rapid evaluation.")
 
 col1, col2 = st.columns([1, 1])
 

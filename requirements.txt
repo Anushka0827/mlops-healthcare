@@ -26,6 +26,9 @@ numpy>=1.26.0
 pandas>=2.2.0
 joblib>=1.4.0
 
+# Cloud Services
+boto3>=1.34.0
+
 # Environment
 python-dotenv>=1.0.0
 

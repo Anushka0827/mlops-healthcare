@@ -19,6 +19,15 @@ from pydantic import BaseModel, Field
 from prometheus_fastapi_instrumentator import Instrumentator
 
 load_dotenv()
+
+from app.s3_utils import download_model_from_s3
+
+# Fetch from S3 if configured or if files are missing locally
+if os.getenv("AWS_S3_BUCKET") or not (os.path.exists("model.pkl") and os.path.exists("mlb.pkl")):
+    logger.info("Attempting to fetch ML models from S3 Artifact Registry...")
+    download_model_from_s3("model.pkl", "model.pkl")
+    download_model_from_s3("mlb.pkl", "mlb.pkl")
+
 _model = joblib.load("model.pkl")
 _mlb   = joblib.load("mlb.pkl")
 

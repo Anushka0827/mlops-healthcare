@@ -35,4 +35,10 @@ model.fit(X, y)
 joblib.dump(model, "model.pkl")
 joblib.dump(mlb,   "mlb.pkl")
 
-print("Model trained and saved as model.pkl and mlb.pkl")
+from dotenv import load_dotenv
+load_dotenv()
+from app.s3_utils import upload_model_to_s3
+upload_model_to_s3("model.pkl")
+upload_model_to_s3("mlb.pkl")
+
+print("Model trained and saved locally (and synced to S3 if configured)")
