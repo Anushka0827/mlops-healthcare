@@ -7,7 +7,7 @@ from loguru import logger
 AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
 
 def get_s3_client():
-    \"\"\"Initialize S3 client based on available environment credentials.\"\"\"
+    """Initialize S3 client based on available environment credentials."""
     try:
         if os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_SECRET_ACCESS_KEY"):
             return boto3.client(
@@ -24,7 +24,7 @@ def get_s3_client():
         return None
 
 def upload_model_to_s3(file_path: str, object_name: str = None) -> bool:
-    \"\"\"Upload a file to an S3 bucket.\"\"\"
+    """Upload a file to an S3 bucket."""
     if not AWS_S3_BUCKET:
         logger.warning("AWS_S3_BUCKET not set. Skipping S3 upload.")
         return False
@@ -45,7 +45,7 @@ def upload_model_to_s3(file_path: str, object_name: str = None) -> bool:
     return True
 
 def download_model_from_s3(object_name: str, file_path: str) -> bool:
-    \"\"\"Download a file from an S3 bucket.\"\"\"
+    """Download a file from an S3 bucket."""
     if not AWS_S3_BUCKET:
         logger.warning("AWS_S3_BUCKET not set. Will use local files if they exist.")
         return False
