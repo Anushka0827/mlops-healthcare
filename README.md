@@ -19,7 +19,7 @@ This project implements the following MLOps architectures:
 - [x] **Expt 8:** Deploy Docker container to Cloud VM (AWS EC2 / Docker Compose)
 - [x] **Expt 9:** Create frontend to visualize predictions using test data (Streamlit)
 - [x] **Expt 10:** Create frontend with real-time user input (Professional Monitoring UI)
-- [ ] **Expt 11:** Model monitoring using Prometheus & Grafana *(Next Phase)*
+- [x] **Expt 11:** Model monitoring using Prometheus & Grafana
 - [ ] **Expt 12:** Kubernetes setup for ML application *(Next Phase)*
 
 ---
@@ -72,8 +72,10 @@ To run the entire system (both backend and frontend) via Docker containers, conn
 ```bash
 docker compose up --build -d
 ```
-- **Backend:** Accessible at `http://localhost:8000/docs`
-- **Frontend:** Accessible at `http://localhost:8501`
+- **Backend API:** Accessible at `http://localhost:8000/docs`
+- **Frontend UI:** Accessible at `http://localhost:8501`
+- **Prometheus Metrics:** Accessible at `http://localhost:9090`
+- **Grafana Dashboards:** Accessible at `http://localhost:3000` (Default Login: `admin` / `admin`)
 
 *(To stop the containers, run `docker compose down`)*
 
