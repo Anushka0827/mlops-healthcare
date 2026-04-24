@@ -46,6 +46,7 @@ ssh -i "$KEY_PEM" "$EC2_USER@$EC2_IP" << 'EOF'
     cd ~/mlops-healthcare
     # Note: On some AWS AMIs, we might need newgrp or sudo for the first time
     sudo docker compose down || true
+    sudo docker system prune -af --volumes || true
     sudo docker compose up --build -d
 EOF
 
